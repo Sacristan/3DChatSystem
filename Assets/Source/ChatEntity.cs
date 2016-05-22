@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
 
 [RequireComponent(typeof(NetworkIdentity))]
 public class ChatEntity : NetworkBehaviour
 {
-    string message;
+    string message="";
     int wordLimit=50;
 
     private NetworkIdentity networkIdentity;
@@ -16,15 +15,15 @@ public class ChatEntity : NetworkBehaviour
     }
 
     [Command]
-    void CmdSendMessageToServer(string words)
+    void CmdSendMessageToServer(string message)
     {
-        RpcSentMessageToClients(words);
+        RpcSentMessageToClients(message);
     }
 
     [ClientRpc]
-    void RpcSentMessageToClients(string words)
+    void RpcSentMessageToClients(string message)
     {
-        ChatManager.PushMessage(words);
+        ChatManager.PushMessage(networkIdentity, message);
     }
 
     void OnGUI()

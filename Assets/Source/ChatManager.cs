@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-[RequireComponent(typeof(UnityEngine.Networking.NetworkManager))]
+[RequireComponent(typeof(NetworkManager))]
 public class ChatManager : MonoBehaviour
 {
     private static ChatManager instance;
-
-    private List<string> messages = new List<string>();
+    private List<ChatNetworkMessage> messages = new List<ChatNetworkMessage>();
     [SerializeField]
     private int messageArrayLimit = 10;
 
@@ -23,19 +23,29 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    public static void PushMessage(string message)
+    public static void PushMessage(NetworkIdentity identity, string message)
     {
-        instance.messages.Add(message);
+        HandleChatLimits();
+        instance.messages.Add(new ChatNetworkMessage(identity, message));
     }
 
     void OnGUI()
     {
         GUILayout.Space(200);
-        GUILayout.Box("MessageList");
 
-        foreach (string message in messages)
+        GUILayout.Box("Messages:");
+
+        foreach (ChatNetworkMessage message in messages)
         {
-            GUILayout.Box(message);
+            GUILayout.Box(message.ToString());
+        }
+    }
+
+    private static void HandleChatLimits()
+    {
+        if (instance.messages.Count >= instance.messageArrayLimit)
+        {
+            instance.messages.RemoveAt(0);
         }
     }
 }
