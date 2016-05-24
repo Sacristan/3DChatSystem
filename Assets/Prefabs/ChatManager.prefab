@@ -64,7 +64,7 @@ MonoBehaviour:
   m_LogLevel: 0
   m_PlayerPrefab: {fileID: 116514, guid: 28c2fc53e797a3f4cab6d66553ca7303, type: 2}
   m_AutoCreatePlayer: 1
-  m_PlayerSpawnMethod: 0
+  m_PlayerSpawnMethod: 1
   m_OfflineScene: ChatLobby
   m_OnlineScene: ChatRoom
   m_SpawnPrefabs: []

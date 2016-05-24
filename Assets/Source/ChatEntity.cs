@@ -4,14 +4,16 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(NetworkIdentity))]
 public class ChatEntity : NetworkBehaviour
 {
-    string message="";
-    int wordLimit=50;
+    string message = "";
+    int wordLimit = 50;
 
     private NetworkIdentity networkIdentity;
-    
+    private ChatSpeechBubbleManager chatSpeechBubbleManager;
+
     void Start()
     {
         networkIdentity = GetComponent<NetworkIdentity>();
+        chatSpeechBubbleManager = GetComponent<ChatSpeechBubbleManager>();
     }
 
     [Command]
@@ -24,6 +26,7 @@ public class ChatEntity : NetworkBehaviour
     void RpcSentMessageToClients(string message)
     {
         ChatManager.PushMessage(networkIdentity, message);
+        chatSpeechBubbleManager.PushText(message);
     }
 
     void OnGUI()
@@ -34,15 +37,20 @@ public class ChatEntity : NetworkBehaviour
             message = GUILayout.TextArea(message, wordLimit);
             if (GUILayout.Button("Send"))
             {
-                if (networkIdentity.isServer)
-                {
-                    RpcSentMessageToClients(message);
-                }
-                else
-                {
-                    CmdSendMessageToServer(message);
-                }
+                SendMessage();
             }
+        }
+    }
+
+    private void SendMessage()
+    {
+        if (networkIdentity.isServer)
+        {
+            RpcSentMessageToClients(message);
+        }
+        else
+        {
+            CmdSendMessageToServer(message);
         }
     }
 

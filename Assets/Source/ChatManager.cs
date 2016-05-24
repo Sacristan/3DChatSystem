@@ -23,10 +23,10 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    public static void PushMessage(NetworkIdentity identity, string message)
+    public static void PushMessage(NetworkIdentity networkIdentity, string message)
     {
         HandleChatLimits();
-        instance.messages.Add(new ChatNetworkMessage(identity, message));
+        instance.messages.Add(new ChatNetworkMessage(networkIdentity, message));
     }
 
     void OnGUI()
